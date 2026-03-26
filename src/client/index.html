@@ -42,9 +42,22 @@
     .price-card button.btn-primary { background: #0099ff; color: #fff; }
     .price-card button.btn-outline { background: none; border: 1px solid #333; color: #fff; }
 
+    /* Social proof */
+    .social-proof { text-align: center; padding: 2rem; color: #666; font-size: 0.95rem; }
+    .social-proof span { color: #aaa; font-weight: 600; }
+
+    /* How it works */
+    .how-it-works { padding: 4rem 2rem; max-width: 900px; margin: 0 auto; }
+    .how-it-works h2 { text-align: center; font-size: 2rem; margin-bottom: 2.5rem; }
+    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; text-align: center; }
+    .step .step-num { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #0099ff, #7c3aed); display: inline-flex; align-items: center; justify-content: center; font-size: 1.3rem; font-weight: 800; margin-bottom: 1rem; }
+    .step h4 { margin-bottom: 0.5rem; font-size: 1.1rem; }
+    .step p { color: #888; font-size: 0.9rem; line-height: 1.5; }
+
     /* Features */
     .features { padding: 4rem 2rem; max-width: 900px; margin: 0 auto; }
-    .features h2 { text-align: center; font-size: 2rem; margin-bottom: 2rem; }
+    .features h2 { text-align: center; font-size: 2rem; margin-bottom: 0.5rem; }
+    .features .subtitle { text-align: center; color: #888; margin-bottom: 2rem; font-size: 1rem; }
     .feature-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
     .feature-card { background: #111; border: 1px solid #222; border-radius: 12px; padding: 1.5rem; }
     .feature-card h4 { margin-bottom: 0.5rem; font-size: 1.1rem; }
@@ -106,9 +119,16 @@
     .upgrade-banner .btn-biz { background: #7c3aed; color: #fff; }
     .manage-sub { background: none; border: 1px solid #333 !important; color: #888 !important; font-size: 0.8rem !important; padding: 0.3rem 0.8rem !important; cursor: pointer; border-radius: 6px; }
 
+    /* CTA bottom */
+    .bottom-cta { text-align: center; padding: 4rem 2rem; max-width: 700px; margin: 0 auto; }
+    .bottom-cta h2 { font-size: 2rem; margin-bottom: 1rem; }
+    .bottom-cta p { color: #888; margin-bottom: 2rem; font-size: 1.1rem; }
+    footer { text-align: center; padding: 2rem; border-top: 1px solid #222; color: #555; font-size: 0.85rem; }
+
     @media (max-width: 768px) {
       .pricing-grid { grid-template-columns: 1fr; }
       .feature-grid { grid-template-columns: 1fr; }
+      .steps { grid-template-columns: 1fr; }
       .stats { grid-template-columns: 1fr; }
       .hero h1 { font-size: 2rem; }
     }
@@ -127,38 +147,64 @@
   <!-- LANDING PAGE -->
   <div class="landing" id="landing">
     <div class="hero">
-      <h1>AI Support for <span>Any Website</span> in 2 Minutes</h1>
-      <p>Add an AI chatbot to your site that answers customer questions using your docs. No code needed. Free to start.</p>
+      <h1>Stop Losing Customers to <span>Unanswered Questions</span></h1>
+      <p>Add an AI support agent to your website in 2 minutes. It learns your business, answers customers 24/7, and costs less than one support ticket.</p>
       <div class="cta">
-        <button class="btn-primary" onclick="showModal('register')">Start Free</button>
+        <button class="btn-primary" onclick="showModal('register')">Start Free — No Card Required</button>
         <button class="btn-secondary" onclick="document.getElementById('pricing').scrollIntoView()">See Pricing</button>
       </div>
     </div>
 
+    <div class="social-proof">
+      Trusted by <span>growing businesses</span> to handle customer support around the clock
+    </div>
+
+    <div class="how-it-works">
+      <h2>Live in 3 Steps</h2>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <h4>Add Your Docs</h4>
+          <p>Paste your FAQ, product info, or support policies. The AI learns everything instantly.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <h4>Customize Your Bot</h4>
+          <p>Set your welcome message and brand voice. Create multiple bots for different products.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <h4>Embed One Line of Code</h4>
+          <p>Copy a single script tag to your site. Your AI agent goes live immediately.</p>
+        </div>
+      </div>
+    </div>
+
     <div class="features" id="features">
-      <h2>Why Businesses Choose Supportly</h2>
+      <h2>Why Businesses Switch to Supportly</h2>
+      <p class="subtitle">Everything you need to automate customer support without hiring</p>
       <div class="feature-grid">
         <div class="feature-card">
-          <h4>2-Minute Setup</h4>
-          <p>Paste one line of code on your site. Upload your FAQ or docs. Your AI agent is live instantly.</p>
+          <h4>Answers in Seconds, Not Hours</h4>
+          <p>Customers get instant, accurate answers from your knowledge base. No more waiting for email replies or hold queues.</p>
         </div>
         <div class="feature-card">
-          <h4>Learns Your Business</h4>
-          <p>Upload product docs, FAQs, or support guides. The AI answers questions using YOUR knowledge base.</p>
+          <h4>Trained on YOUR Business</h4>
+          <p>Upload product docs, FAQs, or support guides. The AI only answers from what you provide — no hallucinations or off-brand responses.</p>
         </div>
         <div class="feature-card">
-          <h4>24/7 Support</h4>
-          <p>Never miss a customer question. Your AI agent works around the clock, even when you're asleep.</p>
+          <h4>Works While You Sleep</h4>
+          <p>24/7 coverage without hiring night shifts. Capture leads and resolve issues at 3am, on weekends, on holidays.</p>
         </div>
         <div class="feature-card">
-          <h4>Analytics Dashboard</h4>
-          <p>See what customers are asking, track conversations, and improve your support over time.</p>
+          <h4>See What Customers Want</h4>
+          <p>Analytics dashboard shows you exactly what people are asking. Find gaps in your docs and improve your product.</p>
         </div>
       </div>
     </div>
 
     <div class="pricing" id="pricing">
-      <h2>Simple Pricing</h2>
+      <h2>Simple, Transparent Pricing</h2>
       <div class="pricing-grid">
         <div class="price-card">
           <h3>Free</h3>
@@ -170,7 +216,7 @@
             <li>Basic analytics</li>
             <li>Supportly branding</li>
           </ul>
-          <button class="btn-outline" onclick="showModal('register')">Get Started</button>
+          <button class="btn-outline" onclick="showModal('register')">Start Building Free</button>
         </div>
         <div class="price-card featured">
           <h3>Pro</h3>
@@ -197,10 +243,18 @@
             <li>API access</li>
             <li>Dedicated support</li>
           </ul>
-          <button class="btn-outline" onclick="showModal('register')">Contact Sales</button>
+          <button class="btn-outline" onclick="showModal('register')">Start Free Trial</button>
         </div>
       </div>
     </div>
+
+    <div class="bottom-cta">
+      <h2>Your Customers Have Questions Right Now</h2>
+      <p>Every unanswered question is a lost sale. Set up Supportly in 2 minutes and start converting visitors into customers today.</p>
+      <button class="btn-primary" style="padding:0.8rem 2.5rem;border-radius:10px;font-size:1.1rem;font-weight:600;cursor:pointer;border:none;background:#0099ff;color:#fff;" onclick="showModal('register')">Get Started Free</button>
+    </div>
+
+    <footer>Supportly &mdash; AI-powered customer support for growing businesses</footer>
   </div>
 
   <!-- AUTH MODAL -->
