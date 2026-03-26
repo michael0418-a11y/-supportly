@@ -1,0 +1,26 @@
+{
+  "name": "supportly",
+  "version": "1.0.0",
+  "description": "AI Customer Support Widget SaaS",
+  "main": "src/server/index.js",
+  "scripts": {
+    "start": "node src/server/index.js",
+    "dev": "node --watch src/server/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.3",
+    "multer": "^2.1.1",
+    "openai": "^6.33.0",
+    "stripe": "^20.4.1",
+    "uuid": "^13.0.0"
+  }
+}

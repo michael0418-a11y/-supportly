@@ -1,0 +1,15 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "supportly",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["src/server/index.js"],
+      "port": 3000,
+      "cwd": "C:\\Users\\micha\\OneDrive\\Desktop\\side-hustles\\supportly",
+      "env": {
+        "PORT": "3000"
+      }
+    }
+  ]
+}

@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Supportly — AI Customer Support for Any Website</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0a0a0a; color: #fff; }
+
+    /* Nav */
+    nav { display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; border-bottom: 1px solid #222; }
+    nav .logo { font-size: 1.5rem; font-weight: 800; background: linear-gradient(135deg, #0099ff, #7c3aed); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    nav .nav-links { display: flex; gap: 1rem; }
+    nav .nav-links a, nav .nav-links button { background: none; border: none; color: #888; cursor: pointer; font-size: 0.9rem; text-decoration: none; }
+    nav .nav-links button.primary { background: #0099ff; color: #fff; padding: 0.5rem 1.2rem; border-radius: 8px; font-weight: 600; }
+
+    /* Hero */
+    .hero { text-align: center; padding: 5rem 2rem 3rem; max-width: 800px; margin: 0 auto; }
+    .hero h1 { font-size: 3rem; line-height: 1.1; margin-bottom: 1rem; }
+    .hero h1 span { background: linear-gradient(135deg, #0099ff, #7c3aed); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero p { color: #888; font-size: 1.2rem; margin-bottom: 2rem; }
+    .hero .cta { display: flex; gap: 1rem; justify-content: center; }
+    .hero .cta button { padding: 0.8rem 2rem; border-radius: 10px; font-size: 1rem; font-weight: 600; cursor: pointer; border: none; }
+    .hero .cta .btn-primary { background: #0099ff; color: #fff; }
+    .hero .cta .btn-secondary { background: #1a1a1a; color: #fff; border: 1px solid #333; }
+
+    /* Pricing */
+    .pricing { padding: 4rem 2rem; max-width: 1000px; margin: 0 auto; }
+    .pricing h2 { text-align: center; font-size: 2rem; margin-bottom: 2rem; }
+    .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+    .price-card { background: #111; border: 1px solid #222; border-radius: 16px; padding: 2rem; }
+    .price-card.featured { border-color: #0099ff; position: relative; }
+    .price-card.featured::before { content: 'MOST POPULAR'; position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: #0099ff; padding: 2px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; }
+    .price-card h3 { font-size: 1.3rem; margin-bottom: 0.5rem; }
+    .price-card .price { font-size: 2.5rem; font-weight: 800; margin: 1rem 0; }
+    .price-card .price span { font-size: 1rem; color: #888; font-weight: 400; }
+    .price-card ul { list-style: none; margin: 1.5rem 0; }
+    .price-card ul li { padding: 0.4rem 0; color: #aaa; }
+    .price-card ul li::before { content: '✓ '; color: #0099ff; font-weight: 700; }
+    .price-card button { width: 100%; padding: 0.7rem; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; font-size: 0.95rem; }
+    .price-card button.btn-primary { background: #0099ff; color: #fff; }
+    .price-card button.btn-outline { background: none; border: 1px solid #333; color: #fff; }
+
+    /* Features */
+    .features { padding: 4rem 2rem; max-width: 900px; margin: 0 auto; }
+    .features h2 { text-align: center; font-size: 2rem; margin-bottom: 2rem; }
+    .feature-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+    .feature-card { background: #111; border: 1px solid #222; border-radius: 12px; padding: 1.5rem; }
+    .feature-card h4 { margin-bottom: 0.5rem; font-size: 1.1rem; }
+    .feature-card p { color: #888; font-size: 0.9rem; line-height: 1.5; }
+
+    /* Auth Modal */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 100; align-items: center; justify-content: center; }
+    .modal-overlay.active { display: flex; }
+    .modal { background: #111; border: 1px solid #222; border-radius: 16px; padding: 2rem; width: 400px; max-width: 90vw; }
+    .modal h2 { margin-bottom: 1.5rem; }
+    .modal input { width: 100%; padding: 0.7rem; margin-bottom: 1rem; border-radius: 8px; border: 1px solid #333; background: #0a0a0a; color: #fff; font-size: 0.95rem; }
+    .modal button { width: 100%; padding: 0.7rem; border-radius: 8px; border: none; background: #0099ff; color: #fff; font-weight: 600; font-size: 1rem; cursor: pointer; }
+    .modal .switch { text-align: center; margin-top: 1rem; color: #888; font-size: 0.85rem; }
+    .modal .switch a { color: #0099ff; cursor: pointer; text-decoration: none; }
+    .modal .error { color: #ff4444; font-size: 0.85rem; margin-bottom: 1rem; display: none; }
+
+    /* Dashboard */
+    .dashboard { display: none; padding: 2rem; max-width: 1100px; margin: 0 auto; }
+    .dashboard.active { display: block; }
+    .dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+    .dash-header h2 { font-size: 1.5rem; }
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem; }
+    .stat-card { background: #111; border: 1px solid #222; border-radius: 12px; padding: 1.5rem; }
+    .stat-card .number { font-size: 2rem; font-weight: 800; }
+    .stat-card .label { color: #888; font-size: 0.85rem; margin-top: 0.3rem; }
+
+    .bot-list { margin-top: 1rem; }
+    .bot-card { background: #111; border: 1px solid #222; border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
+    .bot-card h3 { margin-bottom: 0.5rem; }
+    .bot-card .api-key { font-family: monospace; background: #0a0a0a; padding: 0.5rem; border-radius: 6px; font-size: 0.8rem; color: #888; word-break: break-all; }
+    .bot-card .embed-code { font-family: monospace; background: #0a0a0a; padding: 0.5rem; border-radius: 6px; font-size: 0.75rem; color: #0099ff; margin-top: 0.5rem; word-break: break-all; }
+    .bot-card .actions { display: flex; gap: 0.5rem; margin-top: 1rem; }
+    .bot-card .actions button { padding: 0.4rem 1rem; border-radius: 6px; border: 1px solid #333; background: none; color: #fff; cursor: pointer; font-size: 0.85rem; }
+
+    /* Knowledge base section */
+    .kb-section { margin-top: 1rem; border-top: 1px solid #222; padding-top: 1rem; }
+    .kb-section h4 { margin-bottom: 0.5rem; }
+    .kb-form { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem; }
+    .kb-form input, .kb-form textarea { padding: 0.5rem; border-radius: 6px; border: 1px solid #333; background: #0a0a0a; color: #fff; font-size: 0.9rem; }
+    .kb-form textarea { min-height: 80px; resize: vertical; }
+    .kb-form button { align-self: flex-start; }
+    .doc-item { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid #1a1a1a; }
+    .doc-item .doc-title { font-weight: 600; }
+    .doc-item button { background: none; border: none; color: #ff4444; cursor: pointer; }
+
+    .landing { display: block; }
+    .landing.hidden { display: none; }
+
+    /* Plan badge */
+    .plan-badge { display: inline-block; padding: 0.2rem 0.8rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-left: 0.5rem; }
+    .plan-badge.free { background: #333; color: #888; }
+    .plan-badge.pro { background: rgba(0,153,255,0.2); color: #0099ff; }
+    .plan-badge.business { background: rgba(255,215,0,0.2); color: #ffd700; }
+    .upgrade-banner { background: linear-gradient(135deg, rgba(0,153,255,0.1), rgba(124,58,237,0.1)); border: 1px solid #222; border-radius: 12px; padding: 1.2rem; margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; }
+    .upgrade-banner p { color: #aaa; font-size: 0.9rem; }
+    .upgrade-banner .upgrade-btns { display: flex; gap: 0.5rem; }
+    .upgrade-banner button { padding: 0.5rem 1rem; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; font-size: 0.85rem; }
+    .upgrade-banner .btn-pro { background: #0099ff; color: #fff; }
+    .upgrade-banner .btn-biz { background: #7c3aed; color: #fff; }
+    .manage-sub { background: none; border: 1px solid #333 !important; color: #888 !important; font-size: 0.8rem !important; padding: 0.3rem 0.8rem !important; cursor: pointer; border-radius: 6px; }
+
+    @media (max-width: 768px) {
+      .pricing-grid { grid-template-columns: 1fr; }
+      .feature-grid { grid-template-columns: 1fr; }
+      .stats { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 2rem; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="logo">Supportly</div>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#pricing">Pricing</a>
+      <button class="primary" id="navAuthBtn" onclick="showModal('login')">Sign In</button>
+    </div>
+  </nav>
+
+  <!-- LANDING PAGE -->
+  <div class="landing" id="landing">
+    <div class="hero">
+      <h1>AI Support for <span>Any Website</span> in 2 Minutes</h1>
+      <p>Add an AI chatbot to your site that answers customer questions using your docs. No code needed. Free to start.</p>
+      <div class="cta">
+        <button class="btn-primary" onclick="showModal('register')">Start Free</button>
+        <button class="btn-secondary" onclick="document.getElementById('pricing').scrollIntoView()">See Pricing</button>
+      </div>
+    </div>
+
+    <div class="features" id="features">
+      <h2>Why Businesses Choose Supportly</h2>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <h4>2-Minute Setup</h4>
+          <p>Paste one line of code on your site. Upload your FAQ or docs. Your AI agent is live instantly.</p>
+        </div>
+        <div class="feature-card">
+          <h4>Learns Your Business</h4>
+          <p>Upload product docs, FAQs, or support guides. The AI answers questions using YOUR knowledge base.</p>
+        </div>
+        <div class="feature-card">
+          <h4>24/7 Support</h4>
+          <p>Never miss a customer question. Your AI agent works around the clock, even when you're asleep.</p>
+        </div>
+        <div class="feature-card">
+          <h4>Analytics Dashboard</h4>
+          <p>See what customers are asking, track conversations, and improve your support over time.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="pricing" id="pricing">
+      <h2>Simple Pricing</h2>
+      <div class="pricing-grid">
+        <div class="price-card">
+          <h3>Free</h3>
+          <div class="price">$0<span>/month</span></div>
+          <ul>
+            <li>1 chatbot</li>
+            <li>50 chats/month</li>
+            <li>5 knowledge docs</li>
+            <li>Basic analytics</li>
+            <li>Supportly branding</li>
+          </ul>
+          <button class="btn-outline" onclick="showModal('register')">Get Started</button>
+        </div>
+        <div class="price-card featured">
+          <h3>Pro</h3>
+          <div class="price">$29<span>/month</span></div>
+          <ul>
+            <li>5 chatbots</li>
+            <li>5,000 chats/month</li>
+            <li>50 knowledge docs</li>
+            <li>Full analytics</li>
+            <li>Remove branding</li>
+            <li>Priority support</li>
+          </ul>
+          <button class="btn-primary" onclick="showModal('register')">Start Free Trial</button>
+        </div>
+        <div class="price-card">
+          <h3>Business</h3>
+          <div class="price">$99<span>/month</span></div>
+          <ul>
+            <li>20 chatbots</li>
+            <li>Unlimited chats</li>
+            <li>200 knowledge docs</li>
+            <li>Advanced analytics</li>
+            <li>Custom branding</li>
+            <li>API access</li>
+            <li>Dedicated support</li>
+          </ul>
+          <button class="btn-outline" onclick="showModal('register')">Contact Sales</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AUTH MODAL -->
+  <div class="modal-overlay" id="authModal">
+    <div class="modal">
+      <h2 id="modalTitle">Sign In</h2>
+      <div class="error" id="authError"></div>
+      <div id="nameField" style="display:none;">
+        <input type="text" id="authName" placeholder="Your name">
+      </div>
+      <input type="email" id="authEmail" placeholder="Email">
+      <input type="password" id="authPassword" placeholder="Password">
+      <button onclick="handleAuth()" id="authSubmit">Sign In</button>
+      <div class="switch">
+        <span id="switchText">Don't have an account? </span>
+        <a id="switchLink" onclick="toggleAuthMode()">Sign Up</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div class="dashboard" id="dashboard">
+    <div class="dash-header">
+      <h2>Dashboard <span class="plan-badge free" id="planBadge">FREE</span></h2>
+      <div style="display:flex;gap:0.5rem;align-items:center;">
+        <button class="manage-sub" id="manageSubBtn" style="display:none;" onclick="manageSub()">Manage Subscription</button>
+        <button class="btn-primary" style="padding:0.5rem 1.2rem;border-radius:8px;border:none;background:#0099ff;color:#fff;font-weight:600;cursor:pointer;" onclick="createBot()">+ New Bot</button>
+      </div>
+    </div>
+    <div class="upgrade-banner" id="upgradeBanner">
+      <p>Upgrade for more bots, 5,000+ chats/month, and AI-powered responses</p>
+      <div class="upgrade-btns">
+        <button class="btn-pro" onclick="checkout('pro')">Pro — $29/mo</button>
+        <button class="btn-biz" onclick="checkout('business')">Business — $99/mo</button>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat-card"><div class="number" id="statBots">0</div><div class="label">Active Bots</div></div>
+      <div class="stat-card"><div class="number" id="statChats">0</div><div class="label">Chats Today</div></div>
+      <div class="stat-card"><div class="number" id="statSessions">0</div><div class="label">Total Sessions</div></div>
+    </div>
+    <h3>Your Bots</h3>
+    <div class="bot-list" id="botList"></div>
+  </div>
+
+  <script>
+    const API = window.location.origin + '/api';
+    let token = localStorage.getItem('token');
+    let authMode = 'login';
+    let bots = [];
+
+    // Check if logged in
+    if (token) showDashboard();
+
+    function showModal(mode) {
+      authMode = mode;
+      document.getElementById('authModal').classList.add('active');
+      document.getElementById('modalTitle').textContent = mode === 'login' ? 'Sign In' : 'Create Account';
+      document.getElementById('authSubmit').textContent = mode === 'login' ? 'Sign In' : 'Sign Up';
+      document.getElementById('nameField').style.display = mode === 'register' ? 'block' : 'none';
+      document.getElementById('switchText').textContent = mode === 'login' ? "Don't have an account? " : 'Already have an account? ';
+      document.getElementById('switchLink').textContent = mode === 'login' ? 'Sign Up' : 'Sign In';
+      document.getElementById('authError').style.display = 'none';
+    }
+
+    function toggleAuthMode() {
+      showModal(authMode === 'login' ? 'register' : 'login');
+    }
+
+    document.getElementById('authModal').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) e.currentTarget.classList.remove('active');
+    });
+
+    async function handleAuth() {
+      const email = document.getElementById('authEmail').value;
+      const password = document.getElementById('authPassword').value;
+      const name = document.getElementById('authName').value;
+      const errorEl = document.getElementById('authError');
+
+      try {
+        const endpoint = authMode === 'login' ? '/auth/login' : '/auth/register';
+        const body = authMode === 'login' ? { email, password } : { email, password, name };
+        const res = await fetch(API + endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error);
+
+        token = data.token;
+        localStorage.setItem('token', token);
+        document.getElementById('authModal').classList.remove('active');
+        showDashboard();
+      } catch (err) {
+        errorEl.textContent = err.message;
+        errorEl.style.display = 'block';
+      }
+    }
+
+    async function showDashboard() {
+      document.getElementById('landing').classList.add('hidden');
+      document.getElementById('dashboard').classList.add('active');
+      document.getElementById('navAuthBtn').textContent = 'Log Out';
+      document.getElementById('navAuthBtn').onclick = logout;
+      await Promise.all([loadBots(), loadPlan()]);
+    }
+
+    async function loadPlan() {
+      try {
+        const res = await fetch(API + '/billing/plan', { headers: headers() });
+        if (!res.ok) return;
+        const data = await res.json();
+        const badge = document.getElementById('planBadge');
+        badge.textContent = data.plan.toUpperCase();
+        badge.className = 'plan-badge ' + data.plan;
+
+        const banner = document.getElementById('upgradeBanner');
+        const manageBtn = document.getElementById('manageSubBtn');
+        if (data.plan !== 'free') {
+          banner.style.display = 'none';
+          manageBtn.style.display = 'block';
+        } else {
+          banner.style.display = 'flex';
+          manageBtn.style.display = 'none';
+        }
+      } catch {}
+    }
+
+    async function checkout(plan) {
+      try {
+        const res = await fetch(API + '/billing/checkout', {
+          method: 'POST',
+          headers: headers(),
+          body: JSON.stringify({ plan }),
+        });
+        const data = await res.json();
+        if (data.demo) {
+          alert('Payments are in demo mode. To enable real payments:\n\n1. Create a free Stripe account\n2. Add your STRIPE_SECRET_KEY to .env\n3. Create products/prices in Stripe Dashboard\n4. Add price IDs to .env');
+          return;
+        }
+        if (data.url) window.location.href = data.url;
+        else alert(data.error || 'Failed to start checkout');
+      } catch (err) {
+        alert('Checkout error: ' + err.message);
+      }
+    }
+
+    async function manageSub() {
+      try {
+        const res = await fetch(API + '/billing/portal', { method: 'POST', headers: headers() });
+        const data = await res.json();
+        if (data.url) window.location.href = data.url;
+        else alert(data.error || 'Failed to open billing portal');
+      } catch (err) {
+        alert('Error: ' + err.message);
+      }
+    }
+
+    function logout() {
+      token = null;
+      localStorage.removeItem('token');
+      document.getElementById('landing').classList.remove('hidden');
+      document.getElementById('dashboard').classList.remove('active');
+      document.getElementById('navAuthBtn').textContent = 'Sign In';
+      document.getElementById('navAuthBtn').onclick = () => showModal('login');
+    }
+
+    function headers() {
+      return { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` };
+    }
+
+    async function loadBots() {
+      const res = await fetch(API + '/bots', { headers: headers() });
+      if (!res.ok) return logout();
+      bots = await res.json();
+      document.getElementById('statBots').textContent = bots.length;
+      renderBots();
+
+      // Load analytics for first bot
+      if (bots.length > 0) {
+        const analyticsRes = await fetch(API + '/analytics/' + bots[0].id, { headers: headers() });
+        if (analyticsRes.ok) {
+          const analytics = await analyticsRes.json();
+          document.getElementById('statChats').textContent = analytics.todayMessages;
+          document.getElementById('statSessions').textContent = analytics.totalSessions;
+        }
+      }
+    }
+
+    async function createBot() {
+      const name = prompt('Bot name (e.g., "My Store Support"):');
+      if (!name) return;
+      const res = await fetch(API + '/bots', {
+        method: 'POST',
+        headers: headers(),
+        body: JSON.stringify({ name }),
+      });
+      const data = await res.json();
+      if (!res.ok) return alert(data.error);
+      await loadBots();
+    }
+
+    function renderBots() {
+      const list = document.getElementById('botList');
+      if (bots.length === 0) {
+        list.innerHTML = '<p style="color:#888;text-align:center;padding:2rem;">No bots yet. Click "+ New Bot" to create one.</p>';
+        return;
+      }
+      list.innerHTML = bots.map((bot) => `
+        <div class="bot-card">
+          <h3>${escapeHtml(bot.name)}</h3>
+          <div class="api-key">API Key: ${bot.apiKey}</div>
+          <div class="embed-code">&lt;script src="${window.location.origin}/widget/supportly.js" data-key="${bot.apiKey}"&gt;&lt;/script&gt;</div>
+          <div class="actions">
+            <button onclick="toggleKB('${bot.id}')">Knowledge Base</button>
+            <button onclick="deleteBot('${bot.id}')">Delete</button>
+          </div>
+          <div class="kb-section" id="kb-${bot.id}" style="display:none;">
+            <h4>Knowledge Base</h4>
+            <div class="kb-form">
+              <input type="text" id="docTitle-${bot.id}" placeholder="Topic (e.g., Refund Policy)">
+              <textarea id="docContent-${bot.id}" placeholder="Paste your FAQ, policy, or product info here..."></textarea>
+              <button class="btn-primary" style="padding:0.4rem 1rem;border-radius:6px;border:none;background:#0099ff;color:#fff;cursor:pointer;" onclick="addDoc('${bot.id}')">Add Document</button>
+            </div>
+            <div id="docList-${bot.id}"></div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    async function toggleKB(botId) {
+      const el = document.getElementById('kb-' + botId);
+      if (el.style.display === 'none') {
+        el.style.display = 'block';
+        await loadDocs(botId);
+      } else {
+        el.style.display = 'none';
+      }
+    }
+
+    async function loadDocs(botId) {
+      const res = await fetch(API + '/docs/' + botId, { headers: headers() });
+      const docs = await res.json();
+      const list = document.getElementById('docList-' + botId);
+      list.innerHTML = docs.map((d) => `
+        <div class="doc-item">
+          <span class="doc-title">${escapeHtml(d.title)}</span>
+          <button onclick="deleteDoc('${botId}','${d.id}')">Remove</button>
+        </div>
+      `).join('') || '<p style="color:#666;font-size:0.85rem;">No documents yet. Add your FAQ or support docs above.</p>';
+    }
+
+    async function addDoc(botId) {
+      const title = document.getElementById('docTitle-' + botId).value;
+      const content = document.getElementById('docContent-' + botId).value;
+      if (!title || !content) return alert('Both title and content are required');
+      await fetch(API + '/docs/' + botId, {
+        method: 'POST',
+        headers: headers(),
+        body: JSON.stringify({ title, content }),
+      });
+      document.getElementById('docTitle-' + botId).value = '';
+      document.getElementById('docContent-' + botId).value = '';
+      await loadDocs(botId);
+    }
+
+    async function deleteDoc(botId, docId) {
+      if (!confirm('Remove this document?')) return;
+      await fetch(API + '/docs/' + botId + '/' + docId, { method: 'DELETE', headers: headers() });
+      await loadDocs(botId);
+    }
+
+    async function deleteBot(id) {
+      if (!confirm('Delete this bot? This cannot be undone.')) return;
+      await fetch(API + '/bots/' + id, { method: 'DELETE', headers: headers() });
+      await loadBots();
+    }
+
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+  </script>
+</body>
+</html>
