@@ -2,7 +2,8 @@ const fs = require('fs');
 const path = require('path');
 
 // Simple JSON file database (swap for PostgreSQL/MongoDB in production)
-const DATA_DIR = path.join(__dirname, '..', '..', 'data');
+// Use Railway volume mount if available, otherwise local data/ directory
+const DATA_DIR = process.env.DATA_DIR || path.join(__dirname, '..', '..', 'data');
 
 function ensureDataDir() {
   if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
